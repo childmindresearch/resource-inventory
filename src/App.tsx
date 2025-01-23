@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
 import { Card, Container, Row, Col, Alert, Form, InputGroup, Button } from 'react-bootstrap';
+import NodeblockLink from './Components/NodeblockLink';
 
 interface Resource {
   name: string;
@@ -19,7 +20,15 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState<string>('');
   const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [nodeblockData, setNodeblockData] = useState<any>(null);
 
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/childmindresearch/blockbuster/refs/heads/main/nodeblock_index.json')
+      .then(response => response.json())
+      .then(data => setNodeblockData(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+  
   useEffect(() => {
     const fetchResources = async () => {
       try {
@@ -89,11 +98,18 @@ function App() {
                     <div key={descKey} className="container p-3 my-3">
                       <Card.Text className="font-weight-bold">{descKey}</Card.Text>
                       <ul>
-                        {resourceDescriptions[key][descKey].map((descValue: string, descIndex: number) => (
-                        <li key={descIndex}>
-                          <Card.Text key={descIndex} className="text">{descValue}</Card.Text>
-                        </li>
-                        ))}
+                        {resourceDescriptions[key][descKey].map((descValue: string, descIndex: number) => {
+                          const parts = descValue.split('.');
+                          const nodeblockName = parts[parts.length - 1];
+
+                          return (
+                            <li key={descIndex}>
+                              <Card.Text key={descIndex} className="text">
+                                {descValue} <NodeblockLink nodeblockName={nodeblockName} nodeblockData={nodeblockData} />
+                              </Card.Text>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}

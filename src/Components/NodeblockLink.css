@@ -1,0 +1,7 @@
+.github-icon {
+  transition: transform 0.2s;
+}
+
+.github-icon:hover {
+  transform: scale(1.1);
+}
