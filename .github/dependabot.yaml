@@ -1,0 +1,14 @@
+version: 2
+
+updates:
+- package-ecosystem: github-actions  # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
+  directory: /
+  groups:
+    GitHub-Actions:
+      update-types:
+        - major
+        - minor
+        - patch
+  schedule:
+    interval: monthly
+  target-branch: main
